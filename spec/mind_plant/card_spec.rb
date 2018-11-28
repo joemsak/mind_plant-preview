@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe MindPlant::Card do
   let(:valid_number) { '4111111111111111' }
-  let(:number_validator) { double(:NumberValidator) }
+  let(:number_validator) { double(:NumberValidator, :valid? => true) }
 
   subject do
     MindPlant::Card.new('Joseph Sak', valid_number, 10_000, number_validator)
@@ -54,6 +54,20 @@ RSpec.describe MindPlant::Card do
         subject.balance
       }
     end
+
+    it "ignores charges on invalid cards" do
+      expect(number_validator).to receive(:valid?)
+        .with(valid_number)
+        .and_return(false)
+
+      expect {
+        subject.charge(10)
+      }.to not_change {
+        subject.charges.count
+      }.and not_change {
+        subject.balance
+      }
+    end
   end
 
   describe "#credit" do
@@ -82,6 +96,20 @@ RSpec.describe MindPlant::Card do
       }.to change {
         subject.balance
       }.from(0).to(-10_000.01)
+    end
+
+    it "ignores credits on invalid cards" do
+      expect(number_validator).to receive(:valid?)
+        .with(valid_number)
+        .and_return(false)
+
+      expect {
+        subject.credit(10)
+      }.to not_change {
+        subject.credits.count
+      }.and not_change {
+        subject.balance
+      }
     end
   end
 end

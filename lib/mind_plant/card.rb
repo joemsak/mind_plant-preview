@@ -34,12 +34,12 @@ module MindPlant
     end
 
     def credit(amount)
-      apply_credit(amount)
+      apply_credit(amount) if valid?
     end
 
     private
     def charge_can_be_applied?(amount)
-      balance + amount <= limit
+      valid? && balance + amount <= limit
     end
 
     def apply_charge(amount)
