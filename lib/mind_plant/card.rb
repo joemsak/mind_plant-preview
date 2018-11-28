@@ -14,5 +14,9 @@ module MindPlant
     def valid?
       number_validator.valid?(number)
     end
+
+    def balance
+      0
+    end
   end
 end
