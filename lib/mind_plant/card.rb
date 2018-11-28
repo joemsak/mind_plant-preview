@@ -24,7 +24,7 @@ module MindPlant
     end
 
     def charge(amount)
-      if balance + amount <= limit
+      if charge_can_be_applied?(amount)
         @charges.push({
           processed_at: Time.now.to_i,
           amount: amount
@@ -37,6 +37,11 @@ module MindPlant
         processed_at: Time.now.to_i,
         amount: amount
       })
+    end
+
+    private
+    def charge_can_be_applied?(amount)
+      balance + amount <= limit
     end
   end
 end
