@@ -48,7 +48,9 @@ RSpec.describe MindPlant::Card do
     it "ignores charges which would increase the balance beyond the limit" do
       expect {
         subject.charge(10_000.01)
-      }.not_to change {
+      }.to not_change {
+        subject.charges.count
+      }.and not_change {
         subject.balance
       }
     end
