@@ -15,6 +15,7 @@ RSpec.describe MindPlant::Card do
     its(:number_validator) { is_expected.to eq(number_validator) }
     its(:balance)          { is_expected.to eq(0) }
     its(:charges)          { are_expected.to be_empty }
+    its(:credits)          { are_expected.to be_empty }
   end
 
   describe "#valid?" do
@@ -35,19 +36,50 @@ RSpec.describe MindPlant::Card do
     end
 
     it "affects the balance" do
-      subject.charge(10)
-      subject.charge(9.99)
-      subject.charge(18.76)
-
-      expect(subject.balance).to eq(38.75)
+      expect {
+        subject.charge(10)
+        subject.charge(9.99)
+        subject.charge(18.76)
+      }.to change {
+        subject.balance
+      }.from(0).to(38.75)
     end
 
-    it "ignores charges which would increase the balance the limit" do
+    it "ignores charges which would increase the balance beyond the limit" do
       expect {
         subject.charge(10_000.01)
       }.not_to change {
         subject.balance
       }
+    end
+  end
+
+  describe "#credit" do
+    it "adds to the list of credits" do
+      Timecop.freeze do
+        subject.credit(10)
+        expect(subject.credits).to eq([
+          { processed_at: Time.now.to_i, amount: 10 }
+        ])
+      end
+    end
+
+    it "affects the balance" do
+      subject.charge(10)
+
+      expect {
+        subject.credit(1)
+      }.to change {
+        subject.balance
+      }.from(10).to(9)
+    end
+
+    it "allows credits which would decrease the balance below $0" do
+      expect {
+        subject.credit(10_000.01)
+      }.to change {
+        subject.balance
+      }.from(0).to(-10_000.01)
     end
   end
 end
