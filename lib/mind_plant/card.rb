@@ -18,30 +18,43 @@ module MindPlant
     end
 
     def balance
-      total_charges = charges.sum { |c| c[:amount] }
-      total_credits = credits.sum { |c| c[:amount] }
       total_charges - total_credits
     end
 
+    def total_charges
+      charges.sum { |c| c[:amount] }
+    end
+
+    def total_credits
+      credits.sum { |c| c[:amount] }
+    end
+
     def charge(amount)
-      if charge_can_be_applied?(amount)
-        @charges.push({
-          processed_at: Time.now.to_i,
-          amount: amount
-        })
-      end
+      apply_charge(amount) if charge_can_be_applied?(amount)
     end
 
     def credit(amount)
-      @credits.push({
-        processed_at: Time.now.to_i,
-        amount: amount
-      })
+      apply_credit(amount)
     end
 
     private
     def charge_can_be_applied?(amount)
       balance + amount <= limit
+    end
+
+    def apply_charge(amount)
+      record_to_ledger(:charges, amount)
+    end
+
+    def apply_credit(amount)
+      record_to_ledger(:credits, amount)
+    end
+
+    def record_to_ledger(type, amount)
+      send(type).push({
+        processed_at: Time.now.to_i,
+        amount: amount
+      })
     end
   end
 end
