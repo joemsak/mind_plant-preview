@@ -22,11 +22,11 @@ module MindPlant
     end
 
     def total_charges
-      charges.sum { |c| c[:amount] }
+      charges.sum
     end
 
     def total_credits
-      credits.sum { |c| c[:amount] }
+      credits.sum
     end
 
     def charge(amount)
@@ -43,18 +43,11 @@ module MindPlant
     end
 
     def apply_charge(amount)
-      record_to_ledger(:charges, amount)
+      charges.push(amount)
     end
 
     def apply_credit(amount)
-      record_to_ledger(:credits, amount)
-    end
-
-    def record_to_ledger(type, amount)
-      send(type).push({
-        processed_at: Time.now.to_i,
-        amount: amount
-      })
+      credits.push(amount)
     end
   end
 end

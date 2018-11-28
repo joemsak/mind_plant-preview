@@ -27,12 +27,8 @@ RSpec.describe MindPlant::Card do
 
   describe "#charge" do
     it "adds to the list of charges" do
-      Timecop.freeze do
-        subject.charge(10)
-        expect(subject.charges).to eq([
-          { processed_at: Time.now.to_i, amount: 10 }
-        ])
-      end
+      subject.charge(10)
+      expect(subject.charges).to eq([10])
     end
 
     it "affects the balance" do
@@ -72,12 +68,8 @@ RSpec.describe MindPlant::Card do
 
   describe "#credit" do
     it "adds to the list of credits" do
-      Timecop.freeze do
-        subject.credit(10)
-        expect(subject.credits).to eq([
-          { processed_at: Time.now.to_i, amount: 10 }
-        ])
-      end
+      subject.credit(10)
+      expect(subject.credits).to eq([10])
     end
 
     it "affects the balance" do
