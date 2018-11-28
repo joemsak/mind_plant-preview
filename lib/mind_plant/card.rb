@@ -30,24 +30,16 @@ module MindPlant
     end
 
     def charge(amount)
-      apply_charge(amount) if charge_can_be_applied?(amount)
+      charges.push(amount) if charge_can_be_applied?(amount)
     end
 
     def credit(amount)
-      apply_credit(amount) if valid?
+      credits.push(amount) if valid?
     end
 
     private
     def charge_can_be_applied?(amount)
       valid? && balance + amount <= limit
-    end
-
-    def apply_charge(amount)
-      charges.push(amount)
-    end
-
-    def apply_credit(amount)
-      credits.push(amount)
     end
   end
 end
