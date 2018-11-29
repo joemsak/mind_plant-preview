@@ -34,12 +34,12 @@ RSpec.describe MindPlant::CommandTokenizer do
     expect(tokenizer.card_number).to eq("4111111111111111")
   end
 
-  it "raises an Error on #card_number for other commands" do
+  it "raises an Error on #card_number for unsupported commands" do
     tokenizer = subject.new("Charge Tom $500")
 
     expect {
       tokenizer.card_number
-    }.to raise_error(MindPlant::CommandDoesNotSupportCardNumbersError)
+    }.to raise_error(MindPlant::CommandDoesNotSupportCardNumberError)
   end
 
   it "parses limit amounts" do
@@ -47,11 +47,28 @@ RSpec.describe MindPlant::CommandTokenizer do
     expect(tokenizer.card_limit).to eq(5000)
   end
 
-  it "raises an Error on #card_limit for other commands" do
+  it "raises an Error on #card_limit for unsupported commands" do
     tokenizer = subject.new("Charge Tom $500")
 
     expect {
       tokenizer.card_limit
-    }.to raise_error(MindPlant::CommandDoesNotSupportCardLimitsError)
+    }.to raise_error(MindPlant::CommandDoesNotSupportCardLimitError)
+  end
+
+  it "parses charges" do
+    tokenizer = subject.new("Charge Tom $500")
+    expect(tokenizer.amount).to eq(500)
+  end
+
+  it "parses credits" do
+    tokenizer = subject.new("Credit Tom $3280")
+    expect(tokenizer.amount).to eq(3280)
+  end
+
+  it "raises an Error on #amount for unsupported commands" do
+    tokenizer = subject.new("Add Tom 4111111111111111 $5000")
+    expect {
+      tokenizer.amount
+    }.to raise_error(MindPlant::CommandDoesNotSupportAmountError)
   end
 end

@@ -23,21 +23,20 @@ module MindPlant
     end
 
     def card_number
-      if command == :add
+      for_supported_commands(:add) do
         tokens[2]
-      else
-        raise CommandDoesNotSupportCardNumbersError
+      end
+    end
+
+    def amount
+      for_supported_commands(:charge, :credit) do
+        sanitize_dollar_amount(tokens[2])
       end
     end
 
     def card_limit
-      # Reminder: In this iteration, the following input assumptions are true:
-        # dollar amounts are always whole
-        # and they always begin with a `$`
-      if command == :add
-        tokens[3].sub("$", "").to_i
-      else
-        raise CommandDoesNotSupportCardLimitsError
+      for_supported_commands(:add) do
+        sanitize_dollar_amount(tokens[3])
       end
     end
 
@@ -51,9 +50,32 @@ module MindPlant
         raise UnrecognizedCommandError
       end
     end
+
+    def sanitize_dollar_amount(token)
+      # Reminder: In this iteration, the following input assumptions are true:
+        # dollar amounts are always whole
+        # and they always begin with a `$`
+      token.sub("$", "").to_i
+    end
+
+    def for_supported_commands(*supported_commands, &block)
+      if supported_commands.include?(command)
+        block.call
+      else
+        method_name = caller_locations(1,1)[0].label
+        raise_unsupported_method_for_command_error(method_name)
+      end
+    end
+
+    def raise_unsupported_method_for_command_error(method_name)
+      error_name = "command_does_not_support_#{method_name}_error"
+      error_const = error_name.split('_').map(&:capitalize).join
+      raise Object.const_get("MindPlant::#{error_const}")
+    end
   end
 
   class UnrecognizedCommandError < Error; end
-  class CommandDoesNotSupportCardNumbersError < Error; end
-  class CommandDoesNotSupportCardLimitsError < Error; end
+  class CommandDoesNotSupportCardNumberError < Error; end
+  class CommandDoesNotSupportCardLimitError < Error; end
+  class CommandDoesNotSupportAmountError < Error; end
 end
