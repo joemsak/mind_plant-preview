@@ -3,7 +3,7 @@ module MindPlant
     attr_reader :cards
 
     def initialize
-      @cards = []
+      @cards = {}
     end
 
     def run_command(command)
@@ -18,27 +18,16 @@ module MindPlant
 
     private
     def add(tokenizer)
-      card = Card.new(
-        tokenizer.name,
-        tokenizer.card_number,
-        tokenizer.card_limit
-      )
-
-      cards.push(card)
+      card = Card.new(tokenizer.card_number, tokenizer.card_limit)
+      cards[tokenizer.name] = card
     end
 
     def charge(tokenizer)
-      card = find_card_by_name(tokenizer.name)
-      card.charge(tokenizer.amount)
+      cards[tokenizer.name].charge(tokenizer.amount)
     end
 
     def credit(tokenizer)
-      card = find_card_by_name(tokenizer.name)
-      card.credit(tokenizer.amount)
-    end
-
-    def find_card_by_name(name)
-      cards.detect { |c| c.name == name }
+      cards[tokenizer.name].credit(tokenizer.amount)
     end
   end
 end

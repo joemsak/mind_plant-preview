@@ -8,18 +8,17 @@ RSpec.describe MindPlant::Application do
       expect {
         subject.run_command("Add Tom 4111111111111111 $1000")
       }.to change {
-        subject.cards.count
+        subject.cards.keys.count
       }.from(0).to(1)
 
-      card = subject.cards.first
-      expect(card.name).to eq("Tom")
+      card = subject.cards["Tom"]
       expect(card.number).to eq("4111111111111111")
       expect(card.limit).to eq(1000)
     end
 
     it "charges cards" do
       subject.run_command("Add Tom 4111111111111111 $1000")
-      card = subject.cards.first
+      card = subject.cards.values.first
 
       expect {
         subject.run_command("Charge Tom $50")
@@ -33,7 +32,7 @@ RSpec.describe MindPlant::Application do
 
     it "ignores invalid charges" do
       subject.run_command("Add Tom 4111111111111111 $1000")
-      card = subject.cards.first
+      card = subject.cards.values.first
 
       expect {
         subject.run_command("Charge Tom $1001")
@@ -46,7 +45,7 @@ RSpec.describe MindPlant::Application do
 
     it "ignores charges on invalid cards" do
       subject.run_command("Add Tom 4111111111111112 $1000")
-      card = subject.cards.first
+      card = subject.cards.values.first
 
       expect {
         subject.run_command("Charge Tom $50")
@@ -59,7 +58,7 @@ RSpec.describe MindPlant::Application do
 
     it "credits cards" do
       subject.run_command("Add Tom 4111111111111111 $1000")
-      card = subject.cards.first
+      card = subject.cards.values.first
 
       expect {
         subject.run_command("Credit Tom $50")
@@ -73,7 +72,7 @@ RSpec.describe MindPlant::Application do
 
     it "ignores credits on invalid cards" do
       subject.run_command("Add Tom 4111111111111112 $1000")
-      card = subject.cards.first
+      card = subject.cards.values.first
 
       expect {
         subject.run_command("Credit Tom $50")

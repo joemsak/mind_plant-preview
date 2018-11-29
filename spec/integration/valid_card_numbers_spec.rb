@@ -23,7 +23,7 @@ RSpec.describe "Valid Credit Card Numbers" do
     ]
 
     valids.each do |valid|
-      card = MindPlant::Card.new('Joseph Sak', valid, 30_000)
+      card = MindPlant::Card.new(valid, 30_000)
       expect(card).to be_valid
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe "Valid Credit Card Numbers" do
     ]
 
     invalids.each do |invalid|
-      card = MindPlant::Card.new('Joseph Sak', invalid, 30_000)
+      card = MindPlant::Card.new(invalid, 30_000)
       expect(card).not_to be_valid
     end
   end

@@ -4,10 +4,10 @@ RSpec.describe MindPlant::Report do
   subject { MindPlant::Report }
 
   it "prints the card names with their balance" do
-    cards = [
-      double(:Card, name: "Erik", balance: 500, :valid? => true),
-      double(:Card, name: "Joe", balance: -93, :valid? => true)
-    ]
+    cards = {
+      "Erik" => double(:Card, balance: 500, :valid? => true),
+      "Joe" => double(:Card, balance: -93, :valid? => true)
+    }
 
     report = subject.new(cards)
 
@@ -18,10 +18,10 @@ RSpec.describe MindPlant::Report do
   end
 
   it "prints the names in alphabetical order" do
-    cards = [
-      double(:Card, name: "Joe", balance: -93, :valid? => true),
-      double(:Card, name: "Erik", balance: 500, :valid? => true)
-    ]
+    cards = {
+      "Joe" => double(:Card, balance: -93, :valid? => true),
+      "Erik" => double(:Card, balance: 500, :valid? => true)
+    }
 
     report = subject.new(cards)
 
@@ -32,11 +32,11 @@ RSpec.describe MindPlant::Report do
   end
 
   it "prints an error in place of balance for invalid cards" do
-    cards = [
-      double(:Card, name: "Joe", balance: -93, :valid? => true),
-      double(:Card, name: "Quincy", :valid? => false),
-      double(:Card, name: "Erik", balance: 500, :valid? => true)
-    ]
+    cards = {
+      "Joe" => double(:Card, balance: -93, :valid? => true),
+      "Quincy" => double(:Card, :valid? => false),
+      "Erik" => double(:Card, balance: 500, :valid? => true)
+    }
 
     report = subject.new(cards)
 

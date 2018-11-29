@@ -5,11 +5,10 @@ RSpec.describe MindPlant::Card do
   let(:number_validator) { double(:NumberValidator, :valid? => true) }
 
   subject do
-    MindPlant::Card.new('Joseph Sak', valid_number, 10_000, number_validator)
+    MindPlant::Card.new(valid_number, 10_000, number_validator)
   end
 
   describe "attributes" do
-    its(:name)             { is_expected.to eq('Joseph Sak') }
     its(:number)           { is_expected.to eq(valid_number) }
     its(:limit)            { is_expected.to eq(10_000) }
     its(:number_validator) { is_expected.to eq(number_validator) }

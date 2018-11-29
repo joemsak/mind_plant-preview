@@ -2,12 +2,11 @@ require 'luhn'
 
 module MindPlant
   class Card
-    attr_accessor :name, :number, :limit
+    attr_accessor :number, :limit
 
     attr_reader :number_validator, :charges, :credits
 
-    def initialize(name, number, limit, number_validator = Luhn)
-      @name = name
+    def initialize(number, limit, number_validator = Luhn)
       @number = number
       @limit = limit
       @number_validator = number_validator

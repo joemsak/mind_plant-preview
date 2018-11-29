@@ -3,23 +3,21 @@ module MindPlant
     attr_reader :cards
 
     def initialize(cards)
-      @cards = cards
+      @cards = cards.sort_by { |name, _| name }
     end
 
     def print_summary
-      cards.sort_by(&:name).each do |card|
-        $stdout.puts(build_summary(card))
+      cards.each do |name, card|
+        $stdout.puts(build_summary(name, card))
       end
     end
 
     private
-    def build_summary(card)
-      name = "#{card.name}: "
-
+    def build_summary(name, card)
       if card.valid?
-        name + "$#{card.balance}"
+        "#{name}: $#{card.balance}"
       else
-        name + "error"
+        "#{name}: error"
       end
     end
   end
