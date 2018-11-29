@@ -3,7 +3,8 @@ module MindPlant
     attr_reader :cards
 
     def initialize(cards)
-      @cards = cards.sort_by { |name, _| name }
+      names = cards.keys.sort
+      @cards = Hash[names.zip(cards.values_at(*names))]
     end
 
     def print_summary
