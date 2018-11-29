@@ -3,7 +3,7 @@ module MindPlant
     def self.run(filename)
       app = Application.new
 
-      IO.foreach(filename).lazy.each do |line|
+      IO.foreach(filename) do |line|
         app.run_command(line) rescue next
       end
 
