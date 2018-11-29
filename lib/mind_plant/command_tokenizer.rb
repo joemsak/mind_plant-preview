@@ -12,8 +12,8 @@ module MindPlant
     public
     attr_reader :command
 
-    def initialize(line)
-      @tokens = line.split(" ")
+    def initialize(raw_command)
+      @tokens = raw_command.split(" ")
       @command = parse_command_from_tokens
     end
 
