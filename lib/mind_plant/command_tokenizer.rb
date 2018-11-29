@@ -13,7 +13,7 @@ module MindPlant
     attr_reader :command
 
     def initialize(raw_command)
-      @tokens = raw_command.split(" ")
+      @tokens = (raw_command || "").split(" ")
       @command = parse_command_from_tokens
     end
 
@@ -41,7 +41,11 @@ module MindPlant
 
     private
     def parse_command_from_tokens
-      token = tokens.first.downcase.to_sym
+      token = if tokens.any?
+        tokens.first.downcase.to_sym
+      else
+        ""
+      end
 
       if VALID_COMMANDS.include?(token)
         token

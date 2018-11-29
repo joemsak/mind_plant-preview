@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "mind_plant"
+
+filename = ARGV[0] || ""
+
+if File.exist?(filename)
+  MindPlant::FileInput.run(filename)
+else
+  MindPlant::ConsoleInput.run
+end
