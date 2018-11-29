@@ -7,13 +7,12 @@ module MindPlant
     }
 
     private
-    attr_reader :line, :tokens
+    attr_reader :tokens
 
     public
     attr_reader :command
 
     def initialize(line)
-      @line = line
       @tokens = line.split(" ")
       @command = parse_command_from_tokens
     end
