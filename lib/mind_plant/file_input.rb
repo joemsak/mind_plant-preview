@@ -3,8 +3,12 @@ module MindPlant
     def self.run(filename)
       app = Application.new
 
-      File.read(filename).split("\n").each do |command|
-        app.run_command(command)
+      File.open(filename) do |file|
+        file.lazy.each_slice(1_000) do |lines|
+          lines.each do |line|
+            app.run_command(line) rescue next
+          end
+        end
       end
 
       app.print_report
