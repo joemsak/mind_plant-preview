@@ -1,3 +1,5 @@
+require 'luhn'
+
 module MindPlant
   class Card
     attr_accessor :name, :number, :limit
